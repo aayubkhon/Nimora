@@ -52,7 +52,7 @@ ShopController.signupProcess = async (req, res) => {
     assert(result, Definer.general_err1);
 
     req.session.member = result;
-    res.redirect("/shop/products/collections");
+    res.redirect("/shop/products/collection");
   } catch (err) {
     console.log(`ERROR, cont/signupProcess,${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -80,7 +80,7 @@ ShopController.loginProcess = async (req, res) => {
     req.session.save(function () {
       result.mb_type === "ADMIN"
         ? res.redirect("/shop/all-shop")
-        : res.redirect("/shop/products/collections");
+        : res.redirect("/shop/products/collection");
     });
   } catch (err) {
     console.log(`ERROR, cont/loginProcess,${err.message}`);

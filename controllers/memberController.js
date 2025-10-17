@@ -90,7 +90,7 @@ memberController.getChosenMember = async (req, res) => {
   }
 };
 
-memberController.retrieveAuthmember = (req, res, next) => {
+memberController.retrieveAuthmember = (req,res,next) => {
   try {
     const token = req.cookies["access_token"];
     req.member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;

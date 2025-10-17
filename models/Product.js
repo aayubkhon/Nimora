@@ -8,6 +8,34 @@ class Product {
     this.productModel = ProductModel;
   }
 
+  async getAllProductsData(member, data) {
+    try {
+      const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
+      let match = { product_status: "PROCESS" };
+      if (data.shop_mb_id) {
+        match["shop_mb_id"] = shapeIntoMongooseObjectId(data.shop_mb_id);
+        match["product_collection"] = data.product_collection;
+      }
+      const sort =
+        data.order == "product_price"
+          ? { [data.order]: 1 }
+          : { [data.order]: -1 };
+      const result = await this.productModel
+        .aggregate([
+          { $match: match },
+          { $sort: sort },
+          { $skip: (data.page * 1 - 1) * data.limit },
+          { $limit: data.limit * 1 },
+        ])
+        .exec();
+      // TODO check auth member product likes
+      assert.ok(result, Definer.general_err1);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async getAllProductsDataShop(member) {
     try {
       member._id = shapeIntoMongooseObjectId(member._id);
