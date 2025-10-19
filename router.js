@@ -26,4 +26,10 @@ router.post(
   productController.getAllProducts
 );
 
+router.get(
+  "/products/:id",
+  memberController.retrieveAuthmember,
+  productController.getChosenProduct
+);
+
 module.exports = router;
