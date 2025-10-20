@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { member_type_enums, member_status_enums } = require("../lib/config");
+const { member_type_enums, member_status_enums,member_ordernary_enums } = require("../lib/config");
 
 const memberSchema = new mongoose.Schema(
   {
@@ -17,7 +17,6 @@ const memberSchema = new mongoose.Schema(
       type: String,
       required: true,
       index: { unique: true, sparse: true },
-
     },
     mb_password: {
       type: String,
@@ -59,16 +58,25 @@ const memberSchema = new mongoose.Schema(
       required: false,
       default: 0,
     },
-    mb_location: {
+    mb_top: {
       type: String,
       required: false,
+      default: "N",
+      enum: {
+        values: member_ordernary_enums,
+        message: "{VALUE} is not among prmitted lues",
+      },
     },
+    // mb_location: {
+    //   type: String,
+    //   required: false,
+    // },
     mb_views: {
       type: Number,
       required: false,
       default: 0,
     },
-     mb_likes: {
+    mb_likes: {
       type: Number,
       required: false,
       default: 0,
@@ -87,4 +95,4 @@ const memberSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Member",memberSchema)
+module.exports = mongoose.model("Member", memberSchema);

@@ -6,6 +6,23 @@ const Shop = require("../models/Shop");
 
 let ShopController = module.exports;
 
+ShopController.getShops = async (req, res) => {
+  try {
+    console.log("GET: cont/getShops");
+    const data = req.query;
+    const shop = new Shop();
+    const result = await shop.getAllShopsData(req.member,data);
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/getShops,${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
+
+/****************************
+ *   BSSR RELATED METHODS/       *
+ ***************************/
+
 ShopController.home = (req, res) => {
   try {
     console.log("GET: cont/home");
@@ -150,7 +167,7 @@ ShopController.updateShopByAdmin = async (req, res) => {
     console.log("POST: cont/updateShopByAdmin");
     const shop = new Shop();
     const result = await shop.updateShopByAdminData(req.body);
-    await res.json({ state: "success", data: result });
+    res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/updateShopByAdmin,${err.message}`);
     res.json({ state: "fail", message: err.message });
