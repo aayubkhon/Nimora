@@ -29,7 +29,7 @@ const memberSchema = new mongoose.Schema(
       default: "USER",
       enum: {
         values: member_type_enums,
-        message: "{VALUE} is not among prmitted lues",
+        message: "{VALUE} is not among prmitted values",
       },
     },
     mb_status: {
@@ -38,7 +38,7 @@ const memberSchema = new mongoose.Schema(
       default: "ACTIVE",
       enum: {
         values: member_status_enums,
-        message: "{VALUE} is not among prmitted lues",
+        message: "{VALUE} is not among prmitted values",
       },
     },
     mb_adress: {
@@ -64,7 +64,7 @@ const memberSchema = new mongoose.Schema(
       default: "N",
       enum: {
         values: member_ordernary_enums,
-        message: "{VALUE} is not among prmitted lues",
+        message: "{VALUE} is not among prmitted values",
       },
     },
     // mb_location: {
@@ -92,7 +92,7 @@ const memberSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: true } //createdAt, updatedAt
 );
 
 module.exports = mongoose.model("Member", memberSchema);

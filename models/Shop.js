@@ -8,13 +8,13 @@ class Shop {
     this.memberModel = MemberModel;
   }
 
-  async getAllShopsData(member, data) {
+  async getShopsData(member, data) {
     try {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
       let match = { mb_type: "SHOP", mb_status: "ACTIVE" };
       let aggregationQuery = [];
-      data.limit = data["limit" * 1];
-      data.page = data["page" * 1];
+      data.limit = Number(data.limit) || 10;
+      data.page = Number(data.page) || 1;
 
       switch (data.order) {
         case "top":
@@ -28,16 +28,16 @@ class Shop {
           break;
         default:
           aggregationQuery.push({ $match: match });
-          const sort = { [data.order]: -1 };
+          const sort = { [data.order || "createdAt"]: -1 };
           aggregationQuery.push({ $sort: sort });
           break;
       }
-      aggregationQuery.push({$skip: (data.page - 1) * data.limit})
-      aggregationQuery.push({$limit: data.limit})
-          // TODO check auth member  liked the chosen target
-      const result = await this.memberModel.aggregate(aggregationQuery).exec()
-      assert.ok(result,Definer.general_err1)
-      return result
+      aggregationQuery.push({ $skip: (data.page - 1) * data.limit });
+      aggregationQuery.push({ $limit: data.limit });
+      // TODO check auth member  liked the chosen target
+      const result = await this.memberModel.aggregate(aggregationQuery).exec();
+      assert.ok(result, Definer.general_err1);
+      return result;
     } catch (err) {
       throw err;
     }

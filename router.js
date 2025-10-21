@@ -33,6 +33,10 @@ router.get(
   productController.getChosenProduct
 );
 // Shop related routers
-router.get("/shops",memberController.retrieveAuthmember,ShopController.getShops)
+router.get(
+  "/shops",
+  memberController.retrieveAuthmember,
+  ShopController.getShops
+);
 
 module.exports = router;
