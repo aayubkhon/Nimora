@@ -50,4 +50,10 @@ router.post(
   orderController.createOrder
 );
 
+router.get(
+  "/orders",
+  memberController.retrieveAuthmember,
+  orderController.getMyOrders
+);
+
 module.exports = router;
