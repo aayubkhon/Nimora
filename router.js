@@ -3,7 +3,7 @@ const router = express.Router();
 const memberController = require("./controllers/memberController");
 const productController = require("./controllers/productController");
 const ShopController = require("./controllers/ShopController");
-const orderController = require("./controllers/orderController")
+const orderController = require("./controllers/orderController");
 /****************************
  *         REST API/       *
  ***************************/
@@ -54,6 +54,12 @@ router.get(
   "/orders",
   memberController.retrieveAuthmember,
   orderController.getMyOrders
+);
+
+router.post(
+  "/orders/edit",
+  memberController.retrieveAuthmember,
+  orderController.editChosenOrder
 );
 
 module.exports = router;

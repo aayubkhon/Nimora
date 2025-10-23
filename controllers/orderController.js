@@ -17,12 +17,11 @@ orderController.createOrder = async (req, res) => {
   }
 };
 
-
 orderController.getMyOrders = async (req, res) => {
   try {
     console.log("GET:cont/getMyOrders");
     const order = new Order();
-    const result = await order.getMyOrdersData(req.member,req.query);
+    const result = await order.getMyOrdersData(req.member, req.query);
     assert.ok(req.member, Definer.auth_err5);
     res.json({ state: "success", data: result });
   } catch (err) {
@@ -31,3 +30,15 @@ orderController.getMyOrders = async (req, res) => {
   }
 };
 
+orderController.editChosenOrder = async (req, res) => {
+  try {
+    console.log("POST:cont/editChosenOrder");
+    assert.ok(req.member, Definer.auth_err5);
+    const order = new Order();
+    const result = await order.editChosenOrderData(req.member, req.body);
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/getMyOrders,${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
