@@ -4,6 +4,7 @@ const memberController = require("./controllers/memberController");
 const productController = require("./controllers/productController");
 const ShopController = require("./controllers/ShopController");
 const communityController = require("./controllers/communityController");
+const followController = require("./controllers/followController");
 const orderController = require("./controllers/orderController");
 const uploader_community = require("./utils/upload-multer")("community");
 const uploader_member = require("./utils/upload-multer")("members");
@@ -92,5 +93,13 @@ router.get(
   "/community/single-article/:art_id",
   memberController.retrieveAuthmember,
   communityController.getChosenArticle
+);
+
+// Following related routers
+
+router.post(
+  "/follow/subscribe",
+  memberController.retrieveAuthmember,
+  followController.subscribe
 );
 module.exports = router;
