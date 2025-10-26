@@ -108,4 +108,11 @@ router.post(
   memberController.retrieveAuthmember,
   followController.unsubscriber
 );
+
+router.get("/follow/followings", followController.getMemberFollowings);
+router.get(
+  "/follow/followers",
+  memberController.retrieveAuthmember,
+  followController.getMembeFollowers
+);
 module.exports = router;
