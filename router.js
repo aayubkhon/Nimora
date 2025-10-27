@@ -23,6 +23,13 @@ router.get(
   memberController.retrieveAuthmember,
   memberController.getChosenMember
 );
+// Like related routers
+
+router.post(
+  "/member-liken",
+  memberController.retrieveAuthmember,
+  memberController.likeMemberChosen
+);
 
 // Prodct related routers
 router.post(
@@ -115,4 +122,5 @@ router.get(
   memberController.retrieveAuthmember,
   followController.getMembeFollowers
 );
+
 module.exports = router;

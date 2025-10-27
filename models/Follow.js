@@ -127,7 +127,7 @@ class Follow {
       const follow_id = shapeIntoMongooseObjectId(inquiry.mb_id),
         page = inquiry.page * 1,
         limit = inquiry.limit * 1;
-
+        
       let aggregateQuery = [
         { $match: { follow_id: follow_id } },
         { $sort: { createdAt: -1 } },
