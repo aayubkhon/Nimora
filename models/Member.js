@@ -4,7 +4,7 @@ const assert = require("assert");
 const bcrypt = require("bcrypt");
 const {
   shapeIntoMongooseObjectId,
-  lookup_auth_member_following,
+  lookup_auth_member_following,lookup_auth_member_liked
 } = require("../lib/config");
 const View = require("./View");
 const Like = require("./Like");
@@ -63,7 +63,7 @@ class Member {
       ];
       if (member) {
         await this.viewChosenItemByMember(member, id, "member");
-        // TODO check auth member liked chosen target
+        aggregateQuery.push(((lookup_auth_member_liked)(auth_mb_id)))
         aggregateQuery.push(
           lookup_auth_member_following(auth_mb_id, "members")
         );
@@ -83,7 +83,6 @@ class Member {
       const isValid = await view.validateChosenTarget(view_ref_id, group_type);
       console.log("isValid", isValid);
       assert.ok(isValid, Definer.general_err2);
-      // TODO logeed user has seen target before
       const doesExist = await view.checkViewExistence(view_ref_id);
       console.log("doesExist:", doesExist);
       if (!doesExist) {
@@ -104,7 +103,6 @@ class Member {
       const isValid = await like.validateTargetItem(like_ref_id, group_type);
       console.log("isValid:", isValid);
       assert.ok(isValid, Definer.general_err2);
-      // doesExist
       const doesExist = await like.checkLikeExistence(like_ref_id);
       console.log("doesExist", doesExist);
 

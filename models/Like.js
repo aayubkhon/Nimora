@@ -90,7 +90,6 @@ class Like {
       await this.modifyItemLikeCounts(like_ref_id, group_type, 1);
       return result;
     } catch (err) {
-      console.log(err);
       throw new Error(Definer.mongo_validation_err1);
     }
   }
