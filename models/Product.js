@@ -16,14 +16,20 @@ class Product {
     try {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
       let match = { product_status: "PROCESS" };
+      if (data.product_collection) match["product_collection"] = data.product_collection; 
+      if (data.product_likes) match["product_likes"] = data.product_likes; 
       if (data.shop_mb_id) {
         match["shop_mb_id"] = shapeIntoMongooseObjectId(data.shop_mb_id);
-        match["product_collection"] = data.product_collection;
       }
       const sort =
-        data.order == "product_price"
+        data.order === "product_price"
           ? { [data.order]: 1 }
+          : data.order === "product_views"
+          ? { product_views: -1 } // Sort by views for trending
+          : data.order === "product_likes"
+          ? { product_likes: -1 } // Sort by likes for best sellers
           : { [data.order]: -1 };
+
       const result = await this.productModel
         .aggregate([
           { $match: match },
@@ -33,6 +39,7 @@ class Product {
           lookup_auth_member_liked(auth_mb_id),
         ])
         .exec();
+
       assert.ok(result, Definer.general_err1);
       return result;
     } catch (err) {

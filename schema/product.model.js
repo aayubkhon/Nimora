@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const {
   product_collection_enums,
   product_status_enums,
-  product_size_enums
+  product_size_enums,
 } = require("../lib/config");
 const Schema = mongoose.Schema;
 
