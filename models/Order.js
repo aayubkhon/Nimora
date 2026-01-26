@@ -59,7 +59,6 @@ class Order {
         return await this.saveOrderItemsData(item, order_id);
       });
       const results = await Promise.all(pro_list);
-      console.log("results::", results);
       return true;
     } catch (err) {
       throw err;
@@ -87,8 +86,16 @@ class Order {
   async getMyOrdersData(member, query) {
     try {
       const mb_id = shapeIntoMongooseObjectId(member._id);
-      const order_status = query.status.toUpperCase(),
-        matches = { mb_id: mb_id, order_status: order_status };
+     const  matches = { mb_id: mb_id };
+      if (query.order_status) {
+        const order_status = query.order_status.toUpperCase();
+        matches.order_status = order_status;
+      }
+
+      if (query.order_id) {
+        matches._id = shapeIntoMongooseObjectId(query.order_id);
+      }
+      
       const result = await this.orderModel
         .aggregate([
           { $match: matches },
@@ -111,6 +118,7 @@ class Order {
           },
         ])
         .exec();
+
       return result;
     } catch (err) {
       throw err;
