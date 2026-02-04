@@ -38,7 +38,7 @@ communityController.getMemberArticles = async (req, res) => {
     const result = await community.getMemberArticlesData(
       req.member,
       mb_id,
-      req.query
+      req.query,
     );
     assert.ok(result, Definer.general_err1);
     res.json({ state: "success", data: result });
@@ -64,9 +64,9 @@ communityController.getArticles = async (req, res) => {
 communityController.getChosenArticle = async (req, res) => {
   try {
     console.log("GET: cont/getChosenArticles");
-    const art_id = req.params.art_id,
-      community = new Community(),
-      result = await community.getChosenArticleData(req.member, art_id);
+    const art_id = req.params.art_id;
+    const community = new Community();
+    const result = await community.getChosenArticleData(req.member, art_id);
     assert.ok(result, Definer.general_err1);
     res.json({ state: "success", data: result });
   } catch (err) {

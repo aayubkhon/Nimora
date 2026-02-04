@@ -24,7 +24,12 @@ class Community {
 
   async saveArticleData(data) {
     try {
-      const article = new this.boArticleModel(data);
+      const new_data = {
+        ...data,
+        bo_id: data.bo_id.toLowerCase()
+
+      }
+      const article = new this.boArticleModel(new_data);
       return await article.save();
     } catch (mongo_err) {
       console.log(mongo_err);
