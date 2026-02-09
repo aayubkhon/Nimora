@@ -21,85 +21,91 @@ router.get("/check-me", memberController.checkMyAuthentication);
 router.get(
   "/member/:id",
   memberController.retrieveAuthmember,
-  memberController.getChosenMember
+  memberController.getChosenMember,
 );
-// Like related routers
-
 router.post(
   "/member-liken",
   memberController.retrieveAuthmember,
-  memberController.likeMemberChosen
+  memberController.likeMemberChosen,
 );
+
+router.post(
+  "/member/update",
+  memberController.retrieveAuthmember,
+  uploader_member.single("mb_image"),
+  memberController.updateMember,
+);
+// Like related routers
 
 // Prodct related routers
 router.post(
   "/products",
   memberController.retrieveAuthmember,
-  productController.getAllProducts
+  productController.getAllProducts,
 );
 
 router.get(
   "/products/:id",
   memberController.retrieveAuthmember,
-  productController.getChosenProduct
+  productController.getChosenProduct,
 );
 // Shop related routers
 router.get(
   "/shops",
   memberController.retrieveAuthmember,
-  ShopController.getShops
+  ShopController.getShops,
 );
 router.get(
   "/shops/:id",
   memberController.retrieveAuthmember,
-  ShopController.getChosenShop
+  ShopController.getChosenShop,
 );
 // Order related routers
 router.post(
   "/orders/create",
   memberController.retrieveAuthmember,
-  orderController.createOrder
+  orderController.createOrder,
 );
 
 router.get(
   "/orders",
   memberController.retrieveAuthmember,
-  orderController.getMyOrders
+  orderController.getMyOrders,
 );
 
 router.post(
   "/orders/edit",
   memberController.retrieveAuthmember,
-  orderController.editChosenOrder
+  orderController.editChosenOrder,
 );
 // Community related routers
 router.post(
   "/community/image",
   uploader_community.single("community_image"),
-  communityController.imageInsertion
+  communityController.imageInsertion,
 );
 router.post(
   "/community/create",
   memberController.retrieveAuthmember,
-  communityController.createArticle
+  communityController.createArticle,
 );
 
 router.get(
   "/community/articles",
   memberController.retrieveAuthmember,
-  communityController.getMemberArticles
+  communityController.getMemberArticles,
 );
 
 router.get(
   "/community/target",
   memberController.retrieveAuthmember,
-  communityController.getArticles
+  communityController.getArticles,
 );
 
 router.get(
   "/community/single-article/:art_id",
   memberController.retrieveAuthmember,
-  communityController.getChosenArticle
+  communityController.getChosenArticle,
 );
 
 // Following related routers
@@ -107,20 +113,20 @@ router.get(
 router.post(
   "/follow/subscribe",
   memberController.retrieveAuthmember,
-  followController.subscribe
+  followController.subscribe,
 );
 
 router.post(
   "/follow/unsubscriber",
   memberController.retrieveAuthmember,
-  followController.unsubscriber
+  followController.unsubscriber,
 );
 
 router.get("/follow/followings", followController.getMemberFollowings);
 router.get(
   "/follow/followers",
   memberController.retrieveAuthmember,
-  followController.getMembeFollowers
+  followController.getMembeFollowers,
 );
 
 module.exports = router;

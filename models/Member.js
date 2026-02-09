@@ -4,7 +4,8 @@ const assert = require("assert");
 const bcrypt = require("bcrypt");
 const {
   shapeIntoMongooseObjectId,
-  lookup_auth_member_following,lookup_auth_member_liked
+  lookup_auth_member_following,
+  lookup_auth_member_liked,
 } = require("../lib/config");
 const View = require("./View");
 const Like = require("./Like");
@@ -39,7 +40,7 @@ class Member {
       assert.ok(member, Definer.auth_err2);
       const isMatch = await bcrypt.compare(
         input.mb_password,
-        member.mb_password
+        member.mb_password,
       );
       assert.ok(isMatch, Definer.auth_err3);
 
@@ -63,9 +64,9 @@ class Member {
       ];
       if (member) {
         await this.viewChosenItemByMember(member, id, "member");
-        aggregateQuery.push(((lookup_auth_member_liked)(auth_mb_id)))
+        aggregateQuery.push(lookup_auth_member_liked(auth_mb_id));
         aggregateQuery.push(
-          lookup_auth_member_following(auth_mb_id, "members")
+          lookup_auth_member_following(auth_mb_id, "members"),
         );
       }
       const result = await this.memberModel.aggregate(aggregateQuery).exec();
@@ -117,6 +118,30 @@ class Member {
         like_status: doesExist ? 0 : 1,
       };
 
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+  async updateMemberData(id, data, image) {
+    try {
+      const mb_id = shapeIntoMongooseObjectId(id);
+      let params = {
+        mb_nick: data.mb_nick,
+        mb_phone: data.mb_phone,
+        mb_address: data.mb_address,
+        mb_description: data.mb_description,
+        mb_image: image ? image.path : null,
+      };
+      for (let prop in params) if (!params[prop]) delete params[prop];
+      const result = await this.memberModel
+        .findOneAndUpdate({ _id: mb_id }, params, {
+          runValidators: true,
+          lean: true,
+          returnDocument: "after",
+        })
+        .exec();
+      assert.ok(result, Definer.general_err1);
       return result;
     } catch (err) {
       throw err;
