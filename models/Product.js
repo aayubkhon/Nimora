@@ -115,6 +115,23 @@ class Product {
       throw err;
     }
   }
+   async productStateUpdate(product_id,data_set,num) {
+    try {
+      const pd_id = shapeIntoMongooseObjectId(product_id);
+      await this.memberModel
+        .findOneAndUpdate(
+          {
+            _id:pd_id,
+            data_set: data_set,
+          },
+          {
+            $inc: { [data_set]: num },
+          },
+        )
+        .exec();
+      return true;
+    } catch (err) {}
+  }
 }
 
 module.exports = Product;

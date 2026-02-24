@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema(
     product_status: {
       type: String,
       required: false,
-      default: "PAUSED",
+      default: "PROCESS",
       enum: {
         values: product_status_enums,
         message: "{VALUE} is among permitted enum values",
@@ -51,6 +51,10 @@ const productSchema = new mongoose.Schema(
         values: product_size_enums,
         message: "{VALUE} is among permitted enum values",
       },
+    },
+    product_comments: {
+      type: Number,
+      default: 0,
     },
 
     product_description: { type: String, required: true },

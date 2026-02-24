@@ -147,6 +147,23 @@ class Member {
       throw err;
     }
   }
+  async memberStateUpdate(member_id, data_set, num) {
+    try {
+      const mb_id = shapeIntoMongooseObjectId(member_id);
+      await this.memberModel
+        .findOneAndUpdate(
+          {
+            _id: mb_id,
+            mb_status: "ACTIVE",
+          },
+          {
+            $inc: { [data_set]: num },
+          },
+        )
+        .exec();
+      return true;
+    } catch (err) {}
+  }
 }
 
 module.exports = Member;

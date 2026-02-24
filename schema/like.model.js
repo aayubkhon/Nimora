@@ -8,20 +8,16 @@ const likeSchema = new mongoose.Schema(
     like_ref_id: { type: Schema.Types.ObjectId, required: true },
     like_group: {
       type: String,
+      enum: like_view_group_list,
       required: true,
-      enum: {
-        values: like_view_group_list,
-      },
     },
     bo_id: {
       type: String,
       required: false,
-      enum: {
-        values: board_id_enums_list,
-      },
+      enum: board_id_enums_list,
     },
   },
-  { timestamps: { createdAt: true } }
+  { timestamps: { createdAt: true } },
 );
 
 module.exports = mongoose.model("Like", likeSchema);

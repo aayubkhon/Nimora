@@ -1,6 +1,8 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const reviewSchema = new Schema(
+
+const reviewSchema = new mongoose.Schema(
   {
     mb_id: {
       type: Schema.Types.ObjectId,
@@ -14,7 +16,7 @@ const reviewSchema = new Schema(
       type: Number,
       default: 0,
     },
-    review_context: {
+    review_text: {
       type: String,
       required: true,
     },
@@ -34,4 +36,4 @@ const reviewSchema = new Schema(
   { timestamps:true }
 );
 
-module.exports = model("Review", reviewSchema);
+module.exports = mongoose.model("Review", reviewSchema);

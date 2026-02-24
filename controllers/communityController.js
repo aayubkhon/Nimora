@@ -73,6 +73,33 @@ communityController.getChosenArticle = async (req, res) => {
     console.log(`ERROR, cont/getChosenArticles,${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
+};
 
-  
+communityController.createReview = async (req, res) => {
+  try {
+    console.log("POST: cont/createReview");
+    assert.ok(req.member, Definer.auth_err5);
+    const data = req.body;
+    const community = new Community();
+    const result = await community.createReviewData(req.member, data);
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR: cont/createReview, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
+
+communityController.getReviews = async (req, res) => {
+  try {
+    console.log("GET: cont/getReviews");
+    const community = new Community();
+    const result = await community.getReviewsData(
+      req.member,
+      req.params.item_id
+    );
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR: cont/getReviews, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
 };

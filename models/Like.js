@@ -2,6 +2,7 @@ const MemberModel = require("../schema/member.model");
 const LikeModel = require("../schema/like.model");
 const ProductModel = require("../schema/product.model");
 const BoArticleModel = require("../schema/bo_article.model");
+const ReviewModel = require("../schema/review.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 
@@ -11,6 +12,7 @@ class Like {
     this.memberModel = MemberModel;
     this.productModel = ProductModel;
     this.boArticleModel = BoArticleModel;
+    this.reviewModel = ReviewModel;
     this.mb_id = mb_id;
   }
 
@@ -35,13 +37,22 @@ class Like {
             .exec();
           break;
         case "community":
-        default:
           result = await this.boArticleModel
             .findOne({
               _id: like_ref_id,
-              art_status: "active",
+              art_status: "ACTIVE",
             })
             .exec();
+          break;
+        case "review":
+          result = await this.reviewModel
+            .findOne({
+              _id: like_ref_id,
+
+            })
+            .exec();
+          break;
+        default:
           break;
       }
       return !!result;
@@ -103,7 +114,7 @@ class Like {
               {
                 _id: like_ref_id,
               },
-              { $inc: { mb_likes: modifier } }
+              { $inc: { mb_likes: modifier } },
             )
             .exec();
           break;
@@ -113,21 +124,32 @@ class Like {
               {
                 _id: like_ref_id,
               },
-              { $inc: { product_likes: modifier } }
+              { $inc: { product_likes: modifier } },
             )
             .exec();
           break;
         case "community":
-        default:
           await this.boArticleModel
             .findByIdAndUpdate(
               {
                 _id: like_ref_id,
               },
-              { $inc: { art_likes: modifier } }
+              { $inc: { art_likes: modifier } },
             )
             .exec();
           break;
+        case "review":
+          await this.reviewModel
+            .findByIdAndUpdate(
+              {
+                _id: like_ref_id,
+              },
+              { $inc: { review_likes: modifier } },
+            )
+            .exec();
+          break;
+          default:
+            break;
       }
       return true;
     } catch (err) {

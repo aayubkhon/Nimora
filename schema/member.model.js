@@ -67,10 +67,10 @@ const memberSchema = new mongoose.Schema(
         message: "{VALUE} is not among prmitted values",
       },
     },
-    // mb_location: {
-    //   type: String,
-    //   required: false,
-    // },
+   mb_comments: {
+      type: Number,
+      default: 0,
+    },
     mb_views: {
       type: Number,
       required: false,

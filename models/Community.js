@@ -1,4 +1,8 @@
 const BoArticleModel = require("../schema/bo_article.model");
+const ReviewModel = require("../schema/review.model");
+const MemberModel = require("../schema/member.model");
+const ProductModel = require("../schema/product.model");
+
 const {
   shapeIntoMongooseObjectId,
   board_id_enums_list,
@@ -11,6 +15,9 @@ const Member = require("./Member");
 class Community {
   constructor() {
     this.boArticleModel = BoArticleModel;
+    this.reviewModel = ReviewModel;
+    this.memberModel = MemberModel;
+    this.productModel = ProductModel;
   }
   async createArticleData(member, data) {
     try {
@@ -26,9 +33,8 @@ class Community {
     try {
       const new_data = {
         ...data,
-        bo_id: data.bo_id.toLowerCase()
-
-      }
+        bo_id: data.bo_id.toLowerCase(),
+      };
       const article = new this.boArticleModel(new_data);
       return await article.save();
     } catch (mongo_err) {
@@ -115,6 +121,78 @@ class Community {
       }
       const result = await this.boArticleModel.findById({ _id: art_id }).exec();
       assert.ok(result, Definer.article_err3);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async createReviewData(member, data) {
+    try {
+      const mb_id = shapeIntoMongooseObjectId(member._id);
+      const item_id = shapeIntoMongooseObjectId(data.review_target_id);
+      const review = new this.reviewModel({
+        mb_id: mb_id,
+        review_target_id: item_id,
+        review_group: data.review_group,
+        review_text: data.review_text,
+        review_stars: data.review_stars,
+      });
+      assert.ok(review, Definer.general_err1);
+      switch (data.review_group) {
+        case "member":
+          await this.memberModel
+            .findOneAndUpdate(
+              {
+                _id: item_id,
+                mb_status: "ACTIVE",
+              },
+              { $inc: { mb_comments: 1 } },
+              { returnDocument: "after" },
+            )
+            .exec();
+          break;
+        case "product":
+          await this.productModel
+            .findOneAndUpdate(
+              {
+                _id: item_id,
+                product_status: "PROCESS",
+              },
+              { $inc: { product_comments: 1 } },
+              { returnDocument: "after" },
+            )
+            .exec();
+        default:
+          break;
+      }
+      const result = await review.save();
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+  async getReviewsData(member, id) {
+    try {
+      const product_id = shapeIntoMongooseObjectId(id);
+      const aggrigation = [];
+      aggrigation.push(
+        { $match: { review_target_id: product_id } },
+        {
+          $lookup: {
+            from: "members",
+            localField: "mb_id",
+            foreignField: "_id",
+            as: "member_data",
+          },
+        },
+        { $unwind: "$member_data" },
+      );
+      if (member?._id) {
+        const mb_id = shapeIntoMongooseObjectId(member._id);
+        aggrigation.push(lookup_auth_member_liked(mb_id));
+      }
+      const result = await this.reviewModel.aggregate(aggrigation);
       return result;
     } catch (err) {
       throw err;

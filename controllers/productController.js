@@ -69,4 +69,5 @@ productController.updateChoosenProduct = async (req, res) => {
     console.log(`ERROR, cont/updateChoosenProduct,${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
+  
 };
