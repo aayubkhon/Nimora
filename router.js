@@ -108,6 +108,18 @@ router.get(
   communityController.getChosenArticle,
 );
 
+// Review related routers
+router.post(
+  "/review/createReview",
+  memberController.retrieveAuthmember,
+  // communityController.createReview,
+);
+// router.get(
+//   "/review/getReviews/:item_id",
+//   memberController.memberRetrieve,
+//   communityController.getReviews
+// );
+
 // Following related routers
 
 router.post(

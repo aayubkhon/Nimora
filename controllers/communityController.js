@@ -73,4 +73,6 @@ communityController.getChosenArticle = async (req, res) => {
     console.log(`ERROR, cont/getChosenArticles,${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
+
+  
 };
