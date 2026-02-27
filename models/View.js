@@ -37,7 +37,7 @@ class View {
           result = await this.boArticleModel
             .findOne({
               _id: view_ref_id,
-              art_status: "active",
+              art_status: "ACTIVE",
             })
             .exec();
           break;

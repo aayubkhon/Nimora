@@ -14,25 +14,19 @@ const boArticleSchema = new mongoose.Schema(
     bo_id: {
       type: String,
       required: true,
-      enum: {
-        values: board_id_enums_list,
-        message: "{VALUE} is not among prmitted lues",
-      },
+      enum: board_id_enums_list,
     },
     art_status: {
       type: String,
       required: false,
-      default: "active",
-      enum: {
-        values: board_article_status_enums_list,
-        message: "{VALUE} is not among prmitted lues",
-      },
+      default: "ACTIVE",
+      enum: board_article_status_enums_list,
     },
     art_likes: { type: Number, required: false, default: 0 },
     art_views: { type: Number, required: false, default: 0 },
     mb_id: { type: Schema.Types.ObjectId, ref: "Member", required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("BoArticle", boArticleSchema);

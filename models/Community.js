@@ -51,7 +51,7 @@ class Community {
       const limit = inquiry["limit"] ? inquiry["limit"] * 1 : 5;
       const result = await this.boArticleModel
         .aggregate([
-          { $match: { mb_id: mb_id, art_status: "active" } },
+          { $match: { mb_id: mb_id, art_status: "ACTIVE" } },
           { $sort: { createAt: -1 } },
           { $skip: (page - 1) * limit },
           { $limit: limit },
@@ -79,8 +79,8 @@ class Community {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
       let matches =
         inquiry.bo_id === "all"
-          ? { bo_id: { $in: board_id_enums_list }, art_status: "active" }
-          : { bo_id: inquiry.bo_id, art_status: "active" };
+          ? { bo_id: { $in: board_id_enums_list }, art_status: "ACTIVE" }
+          : { bo_id: inquiry.bo_id, art_status: "ACTIVE" };
       inquiry.limit *= 1;
       inquiry.page *= 1;
       const sort = inquiry.order
