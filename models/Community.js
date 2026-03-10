@@ -138,7 +138,6 @@ class Community {
         review_group: data.review_group,
         review_text: data.review_text,
         review_stars: data.review_stars,
-        
       });
       assert.ok(review, Definer.general_err1);
       switch (data.review_group) {
@@ -197,8 +196,46 @@ class Community {
             as: "reply_messages",
           },
         },
-        // { $unwind: "$reply_messages" },
+        {
+          $lookup: {
+            from: "members",
+            localField: "reply_messages.mb_id",
+            foreignField: "_id",
+            as: "reply_member_data",
+          },
+        },
+        {
+          $addFields: {
+            reply_messages: {
+              $map: {
+                input: "$reply_messages",
+                as: "reply",
+                in: {
+                  $mergeObjects: [
+                    "$$reply",
+                    {
+                      member_data: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: "$reply_member_data",
+                              as: "mem",
+                              cond: { $eq: ["$$mem._id", "$$reply.mb_id"] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        { $unset: "reply_member_data" },
       );
+
       if (member?._id) {
         const mb_id = shapeIntoMongooseObjectId(member._id);
         aggrigation.push(lookup_auth_member_liked(mb_id));
@@ -209,33 +246,6 @@ class Community {
       throw err;
     }
   }
-
-  // async getReviewRepliesData(member, _id) {
-  //   try {
-  //     const review_id = shapeIntoMongooseObjectId(_id);
-  //     const aggrigation = [];
-  //     aggrigation.push(
-  //       { $match: {  review_target_id: review_id } },
-  //       {
-  //         $lookup: {
-  //           from: "members",
-  //           localField: "mb_id",
-  //           foreignField: "_id",
-  //           as: "member_data",
-  //         },
-  //       },
-  //       { $unwind: "$member_data" },
-  //     );
-  //     if (member?._id) {
-  //       const mb_id = shapeIntoMongooseObjectId(member._id);
-  //       aggrigation.push(lookup_auth_member_liked(mb_id));
-  //     }
-  //     const result = await this.reviewModel.aggregate(aggrigation);
-  //     return result;
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // }
 }
 
 module.exports = Community;

@@ -134,3 +134,16 @@ memberController.retrieveAuthmember = (req, res, next) => {
     next();
   }
 };
+
+memberController.getLikedProducts = async (req, res) => {
+  try {
+    console.log("GET:cont/getLikedProducts");
+    const id = req.params.id;
+    const member = new Member();
+    const result = await member.getLikedProductsData(req.member);
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/getLikedProducts,${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};

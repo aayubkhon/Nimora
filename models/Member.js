@@ -1,4 +1,6 @@
 const MemberModel = require("../schema/member.model");
+const LikeModel = require("../schema/like.model");
+const ProductModel = require("../schema/product.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const bcrypt = require("bcrypt");
@@ -12,6 +14,8 @@ const Like = require("./Like");
 class Member {
   constructor() {
     this.memberModel = MemberModel;
+    this.likeModel = LikeModel;
+    this.productModel = ProductModel;
   }
   async signupData(input) {
     try {
@@ -163,6 +167,33 @@ class Member {
         .exec();
       return true;
     } catch (err) {}
+  }
+
+  async getLikedProductsData(member) {
+    try {
+      const mb_id = shapeIntoMongooseObjectId(member?._id);
+      const likedItems = await this.likeModel.find({
+        mb_id: mb_id,
+        like_group: "product",
+      }).exec();
+      const likedProductId = likedItems.map((like) => like.like_ref_id);
+       if (likedProductId.length === 0) return [];
+      const result = await this.productModel
+        .aggregate([
+          {
+            $match: {
+              _id: { $in: likedProductId },
+              product_status: "PROCESS",
+            },
+          },
+          lookup_auth_member_liked(mb_id),
+        ])
+        .exec();
+      assert.ok(result, Definer.general_err1);
+      return result;
+    } catch (err) {
+      throw err;
+    }
   }
 }
 
