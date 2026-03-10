@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-
 const reviewSchema = new mongoose.Schema(
   {
     mb_id: {
@@ -20,9 +19,9 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    review_group:{
-      type:String,
-      required:true,
+    review_group: {
+      type: String,
+      required: true,
     },
     review_likes: {
       type: Number,
@@ -33,7 +32,7 @@ const reviewSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps:true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Review", reviewSchema);

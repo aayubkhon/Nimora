@@ -11,6 +11,7 @@ const {
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const Member = require("./Member");
+const { lookup } = require("dns");
 
 class Community {
   constructor() {
@@ -137,6 +138,7 @@ class Community {
         review_group: data.review_group,
         review_text: data.review_text,
         review_stars: data.review_stars,
+        
       });
       assert.ok(review, Definer.general_err1);
       switch (data.review_group) {
@@ -187,6 +189,15 @@ class Community {
           },
         },
         { $unwind: "$member_data" },
+        {
+          $lookup: {
+            from: "reviews",
+            localField: "_id",
+            foreignField: "review_target_id",
+            as: "reply_messages",
+          },
+        },
+        // { $unwind: "$reply_messages" },
       );
       if (member?._id) {
         const mb_id = shapeIntoMongooseObjectId(member._id);
@@ -198,6 +209,33 @@ class Community {
       throw err;
     }
   }
+
+  // async getReviewRepliesData(member, _id) {
+  //   try {
+  //     const review_id = shapeIntoMongooseObjectId(_id);
+  //     const aggrigation = [];
+  //     aggrigation.push(
+  //       { $match: {  review_target_id: review_id } },
+  //       {
+  //         $lookup: {
+  //           from: "members",
+  //           localField: "mb_id",
+  //           foreignField: "_id",
+  //           as: "member_data",
+  //         },
+  //       },
+  //       { $unwind: "$member_data" },
+  //     );
+  //     if (member?._id) {
+  //       const mb_id = shapeIntoMongooseObjectId(member._id);
+  //       aggrigation.push(lookup_auth_member_liked(mb_id));
+  //     }
+  //     const result = await this.reviewModel.aggregate(aggrigation);
+  //     return result;
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // }
 }
 
 module.exports = Community;

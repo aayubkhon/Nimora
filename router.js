@@ -120,6 +120,7 @@ router.get(
   communityController.getReviews,
 );
 
+
 // Following related routers
 
 router.post(
