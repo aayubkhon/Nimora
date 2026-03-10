@@ -21,6 +21,9 @@ class Product {
       if (data.shop_mb_id) {
         match["shop_mb_id"] = shapeIntoMongooseObjectId(data.shop_mb_id);
       }
+       if (data.search) {
+      match["product_name"] = { $regex: data.search, $options: "i" };
+    }
       const sort =
         data.order === "product_price"
           ? { [data.order]: 1 }
