@@ -61,13 +61,13 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
   serveClient: false,
   origins: "*:*",
-  transports: ["websocket", "polling"],
+  transport: ["Websocket", "xhr-polling"],
 });
 let online_users = 0;
 io.on("connection", function (socket) {
   online_users++;
   console.log("New user", "total:", online_users);
-  socket.emit("greetMsg", { text: "Welcome to Nimora" });
+  socket.emit("greetMsg", { text: "Welcome" });
   io.emit("infoMsg", { total: online_users });
 
   socket.on("disconnect", function () {
@@ -76,9 +76,10 @@ io.on("connection", function (socket) {
     console.log("client disconnected, total:", online_users);
   });
   socket.on("createMsg", function (data) {
-    console.log("createMsg", data);
-    io.emit("newMsg", data);
-  });
+  console.log("createMsg", data);
+  socket.broadcast.emit("newMsg", data);  
+  socket.emit("newMsg", data);            
+});
 });
 /****************************
  *SOCKET.IO BACKEND SERVER*
