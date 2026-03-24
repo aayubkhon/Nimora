@@ -132,7 +132,7 @@ class Member {
       let params = {
         mb_nick: data.mb_nick,
         mb_phone: data.mb_phone,
-        mb_address: data.mb_address,
+        mb_adress: data.mb_adress,
         mb_description: data.mb_description,
         mb_image: image ? image.path : null,
       };
